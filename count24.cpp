@@ -66,8 +66,11 @@ public:
 		}
 	}
 };
-void mergeexps(Exp* const exps, int size, int lindex, int rindex, char op, Exp*  outexps)
+//return false if dived by 0
+bool mergeexps(Exp* const exps, int size, int lindex, int rindex, char op, Exp*  outexps)
 {
+    if (exps[rindex].getvalue()==0 && op=='/') return false;
+
 	Exp* first = new((void*)&(outexps[0]))Exp(&(exps[lindex]), &(exps[rindex]), op);
 	for (int i = 0; i < size; i++)
 	{
@@ -75,6 +78,7 @@ void mergeexps(Exp* const exps, int size, int lindex, int rindex, char op, Exp* 
 			continue;
 		*(++outexps) = exps[i];
 	}
+    return true;
 }
 
 void calcnew(Exp* exps, int expsnum)
@@ -98,16 +102,16 @@ void calcnew(Exp* exps, int expsnum)
 			for (int k = 0; k < sizeof(ops) / sizeof(char); k++)
 			{
 				//skip the condition div by 0 
-				if ((fabs(exps[j].getvalue()) < 0.0001 && ops[k] == '/') || (fabs(exps[i].getvalue()) < 0.0001 && ops[k] == '$'))
-					continue;
 
-				mergeexps(exps, expsnum, i, j, ops[k], merged_exps);
+				if (!mergeexps(exps, expsnum, i, j, ops[k], merged_exps)) 
+                    continue;
 				calcnew(merged_exps, expsnum - 1);
 
 				if (ops[k] == '-' || ops[k] == '/')
 				{
 					//swap the left and right
-					mergeexps(exps, expsnum, j, i, ops[k], merged_exps);
+                    if (!mergeexps(exps, expsnum, j, i, ops[k], merged_exps)) 
+                        continue;
 					calcnew(merged_exps, expsnum - 1);
 				}
 			}
