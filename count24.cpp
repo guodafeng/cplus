@@ -6,6 +6,8 @@
 #include <sstream>
 #include <assert.h>
 #include <math.h>
+#include <<float.h>
+
 using namespace std;
 
 char ops[] = { '+', '-', '*', '/'};
@@ -45,7 +47,10 @@ public:
 			value = expL->value * expR->value;
 			break;
 		case '/':
-			value = expL->value / expR->value;
+            if (expr->Value == 0)
+                value == FLT_MAX;
+            else
+                value = expL->value / expR->value;
 			break;
 		default:
 			assert(false);
