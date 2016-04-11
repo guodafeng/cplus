@@ -6,7 +6,7 @@
 #include <sstream>
 #include <assert.h>
 #include <math.h>
-#include <<float.h>
+#include <float.h>
 
 using namespace std;
 
@@ -47,7 +47,7 @@ public:
 			value = expL->value * expR->value;
 			break;
 		case '/':
-            if (expr->Value == 0)
+            if (expR->value == 0)
                 value == FLT_MAX;
             else
                 value = expL->value / expR->value;
